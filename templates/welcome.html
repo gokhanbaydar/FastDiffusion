@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+    integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="/static/loading.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col col-lg-2" style="border: 1pt solid black;">
+        <div class="mb-3">
+          <label for="basic-url" class="form-label">Prompt</label>
+          <div class="input-group">
+            <textarea id="pprompt" class="form-control" rows="5" aria-label="With textarea"></textarea>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="basic-url" class="form-label">Negative Prompt</label>
+          <div class="input-group">
+            <textarea id="nprompt" class="form-control" rows="5" aria-label="With textarea"></textarea>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="basic-url" class="form-label">Style</label>
+          <div class="input-group">
+            <select id="style" class="form-select" aria-label="">
+              {% for style in styles %}
+              <option value="{{style}}">{{style}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="controlImage" class="form-label">Control Image</label>
+          <input class="form-control" type="file" id="controlImage" accept="image/png, image/gif, image/jpeg">
+        </div>
+        <div class="mb-3">
+          <button type="button" class="btn btn-primary load_models"
+            style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+            Load Models
+          </button>
+        </div>
+        <div class="mb-3">
+          <button type="button" class="btn btn-primary generate"
+            style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+            Generate Image
+          </button>
+        </div>
+      </div>
+      <div class="col-md-auto" style="border: 1pt solid black;">
+        <div class="card" style="width: 18rem;">
+          <img src="..." class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+              content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <footer class="footer mt-auto text-center">
+      <span id="loading_modal_elapsed_seconds" class="float-right" style="padding-right: 10px">elapsed 0.0
+        seconds</span>
+    </footer>
+  </div>
+
+
+  <!-- Loading Modal -->
+  <div class="modal fade" id="loading_modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="loading_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loading_modal_label">Data Warehouse Reporting</h5>
+        </div>
+        <div class="modal-body text-center">
+          <img src="/static/loading.gif" alt=""><br />
+          <h4 style="color: #00A2FF">Loading data, please wait!</h4>
+          <br />
+          <h6 style="color: #00A2FF" id="loading_modal_timer">0.1 s</h6>
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div class="modal fade" id="error_modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="error_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="error_modal_label">Data Warehouse Reporting - Error</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <span class="err" id="error_modal_text">ERROR</span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Please inform DARP Team, click here to
+            close!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  $(".load_models").on("click", function () {
+    showLoadingModal();
+    $.getJSON("/load_models", function (json) {
+      console.log(json);
+      hideLoadingModal();
+    }).fail(function (error) {
+      hideLoadingModal();
+      console.log(this);
+    }).always(function () {
+      hideLoadingModal();
+      console.log(this);
+    });
+  });
+  $(".generate").on("click", function () {
+    showLoadingModal();
+    params = {
+      pprompt: $("#pprompt").val(),
+      nprompt: $("#nprompt").val(),
+      style: $("#style").val(),
+    };
+    console.log($("#controlImage").val());
+    params = Object.entries(params).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join("&");
+    $.getJSON("/generate?" + params, function (json) {
+      console.log(json);
+      hideLoadingModal();
+    }).fail(function (error) {
+      hideLoadingModal();
+      console.log(this);
+    }).always(function () {
+      hideLoadingModal();
+      console.log(this);
+    });
+  });
+</script>
+
+</html>

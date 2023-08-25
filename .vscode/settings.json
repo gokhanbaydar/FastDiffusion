@@ -1,6 +1,40 @@
 {
+  "python.linting.pylintEnabled": false,
+  "python.linting.enabled": true,
+  "python.formatting.provider": "none",
+  "python.formatting.blackArgs": ["--line-length", "180"],
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": ["--max-line-length=180", "--ignore=E203,W503"],
   "[python]": {
+    "editor.formatOnPaste": false,
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "python.formatting.provider": "none"
+  "workbench.iconTheme": "vscode-icons",
+  "editor.formatOnSave": true,
+  "vsicons.associations.folders": [
+    { "icon": "test", "extensions": ["tst"] },
+    { "icon": "library", "extensions": ["rls"] },
+    { "icon": "db", "extensions": ["dbm"] },
+    { "icon": "docs", "extensions": ["dox"] },
+    { "icon": "helper", "extensions": ["cfg"] },
+    { "icon": "log", "extensions": ["lgs"] },
+    { "icon": "module", "extensions": ["cpu"] },
+    { "icon": "controller", "extensions": ["adm"] },
+    { "icon": "redux", "extensions": ["art"] },
+    { "icon": "middleware", "extensions": ["dan"] },
+    { "icon": "aurelia", "extensions": ["dck"] },
+    { "icon": "library", "extensions": ["ear"] },
+    { "icon": "services", "extensions": ["exc"] },
+    { "icon": "docs", "extensions": ["qlk"] },
+    { "icon": "docs", "extensions": ["rep"] },
+    { "icon": "tauri", "extensions": ["rnd"] },
+    { "icon": "public", "extensions": ["sam"] },
+    { "icon": "temp", "extensions": ["sch"] },
+    { "icon": "tools", "extensions": ["utl"] },
+    { "icon": "docs", "extensions": ["wow"] },
+    { "icon": "asset", "extensions": ["static"] },
+    { "icon": "src", "extensions": ["html_creator"] }
+  ],
+  "[json]": { "editor.formatOnSave": false },
+  "[jsonc]": { "editor.formatOnSave": false }
 }
