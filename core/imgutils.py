@@ -15,11 +15,11 @@ def canny_image(image):
     image = cv2.Canny(image, 100, 200)
     image = image[:, :, None]
     image = np.concatenate([image, image, image], axis=2)
-    image = Image.fromarray(image)
+    image = Image.fromarray(image).resize((1024, 1024))
     return image
 
 
-def get_depth_map(image, feature_extractor, depth_estimator):
+def get_depth_map(image, feature_extractor=None, depth_estimator=None):
     if isinstance(image, str):
         image = load_image(image)
     assert isinstance(image, Image.Image)

@@ -12,13 +12,14 @@ def generate(
     control_schema,
     control_image,
 ):
+    fd.set_control_schema(control_schema)
     if not fd.models_loaded:
         fd.load_models()
     fd.controlnet_conditioning_scale = controlnet_conditioning_scale
     style = sdxl_styles.styles.get(style)
     prompt = style[0].replace("{prompt}", prompt)
     negative_prompt = negative_prompt + "," + style[1]
-    return fd.run(control_image, prompt, negative_prompt, control_schema)
+    return fd.run(control_image, prompt, negative_prompt)
 
 
 prompt = gr.Textbox(lines=3)
